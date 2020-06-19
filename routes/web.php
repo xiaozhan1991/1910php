@@ -15,4 +15,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/info', function () {
+    phpinfo();
+});
+
 Route::get('/test/index','IndexController@index');
+Route::get('/test/redis1','IndexController@redis1');
