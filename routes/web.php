@@ -14,4 +14,5 @@
 Route::get('/', function () {
     return view('welcome');
 });
-//xiaozhanbukefu
+
+Route::get('/test/index','IndexController@index');
