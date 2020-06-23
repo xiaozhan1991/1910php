@@ -21,3 +21,10 @@ Route::get('/info', function () {
 
 Route::get('/test/index','IndexController@index');
 Route::get('/test/redis1','IndexController@redis1');
+
+Route::get('/user/reg','User\UserController@reg');//注册页面
+Route::post('/user/regDo','User\UserController@regDo');//执行注册页面
+Route::get('/user/log','User\UserController@log');//登录页面
+Route::post('/user/logDo','User\UserController@logDo');//执行登录页面
+
+Route::get('/user/center','User\UserController@center');//个人中心页面
