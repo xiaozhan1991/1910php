@@ -79,6 +79,7 @@ class UserController extends Controller
         $res = password_verify($password,$name->password);
         if($res){
             Cookie::queue('uid2',$name->user_id,10);
+            Cookie::queue('user_name',$name->user_name,10);
             header('Refresh:2;url=/user/center');
             echo "登录成功";
         }else{
