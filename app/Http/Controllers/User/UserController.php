@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Model\UserModel;
+use Illuminate\Support\Facades\Cookie;
 
 class UserController extends Controller
 {
@@ -77,8 +78,7 @@ class UserController extends Controller
         //验证密码
         $res = password_verify($password,$name->password);
         if($res){
-            setcookie('uid',$name->user_id,time()+3600,'/');
-            setcookie('user_name',$name->user_name,time()+3600,'/');
+            Cookie::queue('uid2',$name->user_id,10);
             header('Refresh:2;url=/user/center');
             echo "登录成功";
         }else{
@@ -92,10 +92,17 @@ class UserController extends Controller
     public function center()
     {
         //判断用户是否已登录
-        if(isset($_COOKIE['uid']) && isset($_COOKIE['user_name'])){
+        $res = Cookie::has('uid2');
+        if(Cookie::has('uid2')){
             return view("user.center");
         }else{
             return redirect("/user/log");
         }
+
+        /*if(isset($_COOKIE['uid']) && isset($_COOKIE['user_name'])){
+            return view("user.center");
+        }else{
+            return redirect("/user/log");
+        }*/
     }
 }
