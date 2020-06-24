@@ -28,3 +28,6 @@ Route::get('/user/log','User\UserController@log');//登录页面
 Route::post('/user/logDo','User\UserController@logDo');//执行登录页面
 
 Route::get('/user/center','User\UserController@center');//个人中心页面
+
+//API
+Route::post('/api/user/reg','Api\IndexController@reg');//注册页面
