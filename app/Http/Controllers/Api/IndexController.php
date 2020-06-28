@@ -116,20 +116,11 @@ class IndexController extends Controller
     }
 
     //个人中心
-    public function center()
+    public function center(Request $request)
     {
-        //判断用户是否已登录
-        if(isset($_GET['token'])){
-            $token = $_GET["token"];
-        }else{
-            $response = [
-                'errno' => 50007,
-                'msg' => '请先进行登录'
-            ];
-            return $response;
-        }
-
+        $token = $request->input('token');
         $uid = Redis::get($token);
+
         if($uid){
             $user_info = UserModel::find($uid);
             echo "欢迎" . $user_info->user_name . "来到个人中心页面~~";
@@ -145,52 +136,37 @@ class IndexController extends Controller
     //订单页面
     public function orders()
     {
-        //鉴权
-        if(isset($_GET['token'])){
-            $token = $_GET["token"];
-            //验证token是否有效
-            $uid = Redis::get($token);
-            if($uid){
-
-            }else{
-               $response = [
-                   'errno' => 50008,
-                   'msg' => '请先进行登录'
-               ];
-              return $response;
-            }
-        }else{
-            $response = [
-                'errno' => 50007,
-                'msg' => '请先进行登录'
-            ];
-            return $response;
-        }
+        //订单信息
+        $arr = [
+            '1397255431485931207',
+            '0317255431485931207',
+            '33757255431485931207',
+            '27507255431485931207',
+            '74797255431485931207'
+        ];
+        $response = [
+            'errno' => 0,
+            'msg' => '成功',
+            'data' => [
+                'orders' => $arr
+            ]
+        ];
+        return $response;
     }
 
     //购物车页面
     public function cart()
     {
-
-        if(!isset($_GET['token'])){
-            $response = [
-                'errno' => 50007,
-                'msg' => '请先进行登录'
-            ];
-            return $response;
-        }
-        //鉴权
-        $token = $_GET["token"];
-        //验证token是否有效
-        $uid = Redis::get($token);
-        if($uid){
-
-        }else{
-            $response = [
-                'errno' => 50008,
-                'msg' => '请先进行登录'
-            ];
-            return $response;
-        }
+        $goods = [
+            1314,
+            642,
+            1991
+        ];
+        $response = [
+            'errno' => 0,
+            'msg' => '成功',
+            'data' => $goods
+        ];
+        return $response;
     }
 }
