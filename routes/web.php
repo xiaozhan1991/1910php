@@ -31,3 +31,5 @@ Route::get('/user/center','User\UserController@center');//个人中心页面
 
 //API
 Route::post('/api/user/reg','Api\IndexController@reg');//注册页面
+Route::post('/api/user/log','Api\IndexController@log');//登录页面
+Route::get('/api/user/center','Api\IndexController@center');//个人中心页面

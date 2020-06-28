@@ -86,8 +86,6 @@ class UserController extends Controller
             header('Refresh:2;url=/user/log');
             echo "用户名和密码不一致";
         }
-
-
     }
     //个人中心
     public function center()
@@ -99,11 +97,5 @@ class UserController extends Controller
         }else{
             return redirect("/user/log");
         }
-
-        /*if(isset($_COOKIE['uid']) && isset($_COOKIE['user_name'])){
-            return view("user.center");
-        }else{
-            return redirect("/user/log");
-        }*/
     }
 }

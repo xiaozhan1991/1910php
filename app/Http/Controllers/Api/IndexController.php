@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Model\UserModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cookie;
+use App\Model\TokenModel;
+use TheSeer\Tokenizer\Token;
 
 class IndexController extends Controller
 {
@@ -73,5 +76,59 @@ class IndexController extends Controller
             ];
         }
         return $response;
+    }
+
+    //登录
+    public function log(Request $request)
+    {
+        $user_name = $request->input("user_name");
+        $password = $request->input("password");
+
+        //echo "此用户输入的密码：". $password;echo "</br>";
+
+        //验证登录的数据信息
+        $name = UserModel::where(["user_name"=>$user_name])->first();
+        //echo "数据库中的密码：".$name->password;echo '</br>';
+
+        //验证密码
+        $res = password_verify($password,$name->password);
+        if($res){
+           //生成token
+             $str = $name->user_id . $name->user_name . time();
+             $token = substr(md5($str),10,16) . substr(md5($str),0,10);
+
+             $data = [
+                 'uid' => $name->user_id,
+                 'token' => $token
+             ];
+             TokenModel::insert($data);
+
+             $response = [
+                'errno' => 0,
+                'msg' => '恭喜，登录成功',
+                 'token' => $token
+             ];
+        }else{
+            $response = [
+                'errno' => 50006,
+                'msg' => '用户名和密码不一致',
+            ];
+        }
+        return $response;
+    }
+
+    //个人中心
+    public function center()
+    {
+        //判断用户是否已登录
+        $token = $_GET["token"];
+        $res = TokenModel::where(['token'=>$token])->first();
+        if($res){
+            $uid = $res->uid;
+            $user_info = UserModel::find($uid);
+            echo "欢迎" . $user_info->user_name . "来到个人中心页面~~";
+        }else{
+            echo "请先进行登录";
+        }
     }
 }
