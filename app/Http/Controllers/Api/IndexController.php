@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 use App\Model\TokenModel;
 use TheSeer\Tokenizer\Token;
-
+use Illuminate\Support\Facades\Redis;
 class IndexController extends Controller
 {
     //注册
@@ -97,11 +97,9 @@ class IndexController extends Controller
              $str = $name->user_id . $name->user_name . time();
              $token = substr(md5($str),10,16) . substr(md5($str),0,10);
 
-             $data = [
-                 'uid' => $name->user_id,
-                 'token' => $token
-             ];
-             TokenModel::insert($data);
+             //token保存redis里面
+            Redis::set($token,$name->user_id);
+            //设置key的过期时间
 
              $response = [
                 'errno' => 0,
@@ -121,14 +119,78 @@ class IndexController extends Controller
     public function center()
     {
         //判断用户是否已登录
-        $token = $_GET["token"];
-        $res = TokenModel::where(['token'=>$token])->first();
-        if($res){
-            $uid = $res->uid;
+        if(isset($_GET['token'])){
+            $token = $_GET["token"];
+        }else{
+            $response = [
+                'errno' => 50007,
+                'msg' => '请先进行登录'
+            ];
+            return $response;
+        }
+
+        $uid = Redis::get($token);
+        if($uid){
             $user_info = UserModel::find($uid);
             echo "欢迎" . $user_info->user_name . "来到个人中心页面~~";
         }else{
-            echo "请先进行登录";
+            $response = [
+                'errno' => 50008,
+                'msg' => '请先进行登录'
+            ];
+            return $response;
+        }
+    }
+
+    //订单页面
+    public function orders()
+    {
+        //鉴权
+        if(isset($_GET['token'])){
+            $token = $_GET["token"];
+            //验证token是否有效
+            $uid = Redis::get($token);
+            if($uid){
+
+            }else{
+               $response = [
+                   'errno' => 50008,
+                   'msg' => '请先进行登录'
+               ];
+              return $response;
+            }
+        }else{
+            $response = [
+                'errno' => 50007,
+                'msg' => '请先进行登录'
+            ];
+            return $response;
+        }
+    }
+
+    //购物车页面
+    public function cart()
+    {
+
+        if(!isset($_GET['token'])){
+            $response = [
+                'errno' => 50007,
+                'msg' => '请先进行登录'
+            ];
+            return $response;
+        }
+        //鉴权
+        $token = $_GET["token"];
+        //验证token是否有效
+        $uid = Redis::get($token);
+        if($uid){
+
+        }else{
+            $response = [
+                'errno' => 50008,
+                'msg' => '请先进行登录'
+            ];
+            return $response;
         }
     }
 }
