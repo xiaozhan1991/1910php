@@ -21,6 +21,8 @@ Route::get('/info', function () {
 
 Route::get('/test/index','IndexController@index');
 Route::get('/test/redis1','IndexController@redis1');
+Route::get('/test/sign1','IndexController@sign1');
+Route::get('/secret','IndexController@secret');
 
 Route::get('/user/reg','User\UserController@reg');//注册页面
 Route::post('/user/regDo','User\UserController@regDo');//执行注册页面
