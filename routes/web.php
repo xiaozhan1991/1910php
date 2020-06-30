@@ -19,10 +19,16 @@ Route::get('/info', function () {
     phpinfo();
 });
 
-Route::get('/test/index','IndexController@index');
-Route::get('/test/redis1','IndexController@redis1');
-Route::get('/test/sign1','IndexController@sign1');
-Route::get('/secret','IndexController@secret');
+//上课测试
+Route::prefix('/test')->group(function(){
+    Route::get('/index','IndexController@index');
+    Route::get('/sign1','IndexController@sign1');
+    Route::get('/shop','IndexController@shop');
+    Route::get('/send_data','IndexController@send_data');
+    Route::get('/post_data','IndexController@post_data');
+    Route::get('/encrypt1','IndexController@encrypt1');//对称加密
+});
+
 
 Route::get('/user/reg','User\UserController@reg');//注册页面
 Route::post('/user/regDo','User\UserController@regDo');//执行注册页面
